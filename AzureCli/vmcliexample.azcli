@@ -5,10 +5,10 @@ $myVM               =   "AzureCliVm"
 $AdminUserName      =   "azureuser"
 $AdminPassword      =   "MS2019.31.0a-"
 $myResourceGroup    =   "RGroup"
-$location           =   "chinanorth2"
+$location           =   "eastasia"
 $vmImage            =   "Canonical:UbuntuServer:18.04-LTS:latest"
 $vmSize             =   "Standard_D8_v3"
-$vmPort             =   "80"
+$vmPort             =   "22"
 
 $myNic              =   "RGNic"
 $myVnet             =   "RGVnet"
@@ -17,18 +17,28 @@ $mySubnet           =   "RGSubnet"
 $mySubnetaddprefix  =   "192.168.1.0/24"
 $myPublicIP         =   "RGPublicIP"
 
-$isAcceleratednetwork = false
+$isAcceleratednetwork = "false"
 $myNetworkSecurityGroup = "RGNetworkSecGroup"
+
+#set to cloud 
+#az cloud set -n AzureChinaCloud
+az cloud set -n AzureCloud
+
+#login in 
+az login
+
+#if you have many subscription you need select one
+#az account set --subscription "My Demos"
+
+#Login-AzureRmAccount
+#Get-AzureRmSubscription -SubscriptionId $SubscriptionId
+#Select-AzureRmSubscription -SubscriptionId $SubscriptionId
 
 # Create a resource group.
 az group create --name $myResourceGroup --location $location 
 
 # Create a virtual network.
-az network vnet create  --resource-group $myResourceGroup \
-                        --name $myVnet \
-                        --address-prefix $myVnetaddPrefix  \
-                        --subnet-name $mySubnet \
-                        --subnet-prefix $mySubnetaddprefix
+az network vnet create  --resource-group $myResourceGroup --name $myVnet --address-prefix $myVnetaddPrefix --subnet-name $mySubnet --subnet-prefix $mySubnetaddprefix
 
 # Create a public IP address.
 az network public-ip create --resource-group $myResourceGroup --name $myPublicIP
@@ -36,29 +46,9 @@ az network public-ip create --resource-group $myResourceGroup --name $myPublicIP
 # Create a network security group.
 az network nsg create --resource-group $myResourceGroup --name $myNetworkSecurityGroup
 
-az network nsg rule create  --resource-group $myResourceGroup --nsg-name $myNetworkSecurityGroup \
-                            --name Allow-SSH-Internet  --access Allow --protocol Tcp  \
-                            --direction Inbound  --priority 100 --source-address-prefix Internet   \
-                            --source-port-range "*"  --destination-address-prefix "*"  --destination-port-range $vmPort
-
+az network nsg rule create  --resource-group $myResourceGroup --nsg-name $myNetworkSecurityGroup --name Allow-SSH-Internet  --access Allow --protocol Tcp  --direction Inbound  --priority 100 --source-address-prefix Internet --source-port-range "*"  --destination-address-prefix "*"  --destination-port-range $vmPort
 # Create a virtual network card and associate with public IP address and NSG.
-az network nic create \
-  --resource-group $myResourceGroup \
-  --name $myNic \
-  --vnet-name $myVnet \
-  --subnet $mySubnet \
-  --network-security-group $myNetworkSecurityGroup \
-  --public-ip-address $myPublicIP \
-  --accelerated-networking $isAcceleratednetwork
+az network nic create --resource-group $myResourceGroup --name $myNic --vnet-name $myVnet --subnet $mySubnet --network-security-group $myNetworkSecurityGroup --public-ip-address $myPublicIP --accelerated-networking $isAcceleratednetwork
 
 # Create a virtual machine. 
-az vm create \
-    --resource-group $myResourceGroup \
-    --name $myVM \
-    --location $location \
-    --size $vmSize \
-    --nics $myNic \
-    --image  $vmImage \
-    --authentication-type password \
-    --admin-username $AdminUserName \
-    --admin-password $AdminPassword  
+az vm create --resource-group $myResourceGroup --name $myVM --location $location --size $vmSize --nics $myNic --image  $vmImage --authentication-type password  --admin-username $AdminUserName  --admin-password $AdminPassword  
