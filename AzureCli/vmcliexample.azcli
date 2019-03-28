@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Update for your admin password
+$myVM               =   "AzureCliVm"
 $AdminUserName      =   "azureuser"
 $AdminPassword      =   "MS2019.31.0a-"
 $myResourceGroup    =   "RGroup"
