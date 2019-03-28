@@ -9,16 +9,15 @@ $vmImage            =   "Canonical:UbuntuServer:18.04-LTS:latest"
 $vmSize             =   "Standard_D8_v3"
 $vmPort             =   "80"
 
-$myNetworkSecurityGroup = "RGNetworkSecGroup"
-
 $myNic              =   "RGNic"
 $myVnet             =   "RGVnet"
 $myVnetaddPrefix    =   "192.168.0.0/16"
 $mySubnet           =   "RGSubnet"
 $mySubnetaddprefix  =   "192.168.1.0/24"
 $myPublicIP         =   "RGPublicIP"
-$isAcceleratednetwork = true
 
+$isAcceleratednetwork = false
+$myNetworkSecurityGroup = "RGNetworkSecGroup"
 
 # Create a resource group.
 az group create --name $myResourceGroup --location $location 
