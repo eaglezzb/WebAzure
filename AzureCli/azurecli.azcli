@@ -1,0 +1,17 @@
+#获取活动的云以及所有可用云的列表
+az cloud list --output table
+
+#若要获取有关某个云的更多详细信息
+az cloud show --name AzureChinaCloud --output json
+
+#切换活动的云
+az cloud set --name AzureChinaCloud
+
+#注册新云
+az cloud register
+
+#注销云
+az cloud unregister --name MyCloud
+
+#登录 
+az login -u <username> -p <password>
