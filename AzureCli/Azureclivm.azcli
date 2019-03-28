@@ -1,3 +1,6 @@
+#获取活动的云以及所有可用云的列表
+az cloud list --output table
+
 #切换活动的云环境
 az cloud set --name AzureChinaCloud
 az cloud set -n AzureChinaCloud
@@ -17,3 +20,13 @@ az vm image list-skus --location location --publisher publisherName --offer offe
 公共IP地址	    否	    可以向 VM 分配一个公共 IP 地址，以便远程访问它。
 网络接口	    是	    VM 需要使用网络接口在网络中通信。
 数据磁盘	    否	    VM可以包含数据磁盘，以便扩展存储功能。
+
+#获取区域 
+az account list-locations
+
+DisplayName    Latitude    Longitude    Name
+-------------  ----------  -----------  -----------
+China North    39.9788     116.4959     chinanorth
+China East     31.3209     121.5891     chinaeast
+China North 2  39.9788     116.4959     chinanorth2
+China East 2   31.3209     121.5891     chinaeast2
