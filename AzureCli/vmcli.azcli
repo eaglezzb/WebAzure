@@ -1,0 +1,28 @@
+myVnet = BJ2AccNet
+mySubnet = BJ2AccSubNet
+myResourceGroup = BJ2AccNetResGroup
+myNetworkSecurityGroup = BJ2AccNetResSecGroup
+myPublicIp = BJ2PublicIp
+myVM = BJ2VM
+myNic = BJ2Nic
+// Standard_D8s_v3  / Standard_D8_v3
+
+az group create --name BJ2AccNetResGroup --location ChinaNorth2
+
+az network vnet create --resource-group BJ2AccNetResGroup --name BJ2AccNet --address-prefix 192.168.0.0/16 --subnet-name BJ2AccSubNet  --subnet-prefix 192.168.1.0/24
+
+az network nsg create --resource-group BJ2AccNetResGroup --name BJ2AccNetResSecGroup
+
+az network nsg rule create --resource-group BJ2AccNetResGroup --nsg-name BJ2AccNetResSecGroup --name Allow-SSH-Internet  --access Allow --protocol Tcp  --direction Inbound  --priority 100 --source-address-prefix Internet   --source-port-range "*"  --destination-address-prefix "*"  --destination-port-range 22
+
+az network public-ip create --name BJ2PublicIp --resource-group BJ2AccNetResGroup
+
+az network nic create --resource-group BJ2AccNetResGroup --name BJ2Nic --vnet-name BJ2AccNet --subnet BJ2AccSubNet --accelerated-networking true --public-ip-address BJ2PublicIp --network-security-group BJ2AccNetResSecGroup
+az network nic create --resource-group BJ2AccNetResGroup --name BJ2Nic --vnet-name BJ2AccNet --subnet BJ2AccSubNet --public-ip-address BJ2PublicIp --network-security-group BJ2AccNetResSecGroup
+
+az vm create --resource-group BJ2AccNetResGroup --name BJ2VM --image "OpenLogic:CentOS:6.8:6.8.20170517"  --size Standard_D8_v3   --authentication-type password --admin-username azureuser --admin-password "MS2018.12.11a-"  --nics BJ2Nic
+
+
+az vm create --resource-group BJ2AccNetResGroup --name BJ2VM --attach-os-disk haha  --os-type Linux --size Standard_D8_v3 --location ChinaNorth2   --nics BJ2Nic                                                             MS2019.31.0a-
+
+az vm create -g rg01 -n vm01 --attach-os-disk vm01_OsDisk_1_d65db0c7a026490199cf55cc0abf7c8c_copy --nics vm015 --os-type Linux --plan-name 7_2 --plan-product cloudera-centos-os --plan-publisher cloudera

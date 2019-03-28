@@ -1,0 +1,19 @@
+#切换活动的云环境
+az cloud set --name AzureChinaCloud
+az cloud set -n AzureChinaCloud
+az cloud set -n AzureCloud
+
+#列出映像发布者
+az vm image list-publishers --location location
+#列出映像产品
+az vm image list-offers --location location --publisher publisherName
+#列出映像 SKU
+az vm image list-skus --location location --publisher publisherName --offer offerName
+
+资源	        必须	说明
+资源组	        是	    VM 必须包含在资源组中。
+存储帐户	    是	    VM 需要使用存储帐户来存储其虚拟硬盘。
+虚拟网络	    是	    VM 必须是虚拟网络的成员。
+公共IP地址	    否	    可以向 VM 分配一个公共 IP 地址，以便远程访问它。
+网络接口	    是	    VM 需要使用网络接口在网络中通信。
+数据磁盘	    否	    VM可以包含数据磁盘，以便扩展存储功能。

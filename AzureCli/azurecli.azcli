@@ -4,8 +4,10 @@ az cloud list --output table
 #若要获取有关某个云的更多详细信息
 az cloud show --name AzureChinaCloud --output json
 
-#切换活动的云
+#切换活动的云环境
 az cloud set --name AzureChinaCloud
+az cloud set -n AzureChinaCloud
+az cloud set -n AzureCloud
 
 #注册新云
 az cloud register
@@ -13,5 +15,30 @@ az cloud register
 #注销云
 az cloud unregister --name MyCloud
 
-#登录 
+#登录 在命令行中使用凭据登录
 az login -u <username> -p <password>
+
+#使用服务主体进行登录
+az login --service-principal -u <app-url> -p <password-or-cert> --tenant <tenant>
+
+#使用其他租户登录
+az login --tenant <tenant>
+
+#使用托管标识登录
+az login --identity
+
+#常用命令
+
+#资源组	            az group
+#虚拟机	            az vm
+#存储帐户	        az storage account
+#密钥保管库	        az keyvault
+#Web 应用程序	    az webapp
+#SQL 数据库	        az sql server
+#CosmosDB	        az cosmosdb
+
+--help 会输出有关命令及其参数的 CLI 参考信息并列出可用的子组和命令。
+--output 可更改输出格式。 可用的输出格式包括 json、jsonc（彩色 JSON）、tsv（制表符分隔值）和 table（用户可读 ASCII 表）。 默认情况下，CLI 输出 json。 若要详细了解可用输出格式，请参阅 Azure CLI 的输出格式。
+--query 使用 JMESPath 查询语言筛选从 Azure 服务返回的输出。 若要详细了解查询，请参阅使用 Azure CLI 查询命令结果和 JMESPath 教程。
+--verbose 输出有关操作期间在 Azure 中创建的资源的信息和其他有用信息。
+--debug 输出有关 CLI 操作的更详细信息，用于调试目的。 如果发现了 bug，在提交 bug 报告时，请提供启用 --debug 标志生成的输出。
