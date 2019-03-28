@@ -18,11 +18,7 @@ az network nsg rule create --resource-group BJ2AccNetResGroup --nsg-name BJ2AccN
 az network public-ip create --name BJ2PublicIp --resource-group BJ2AccNetResGroup
 
 az network nic create --resource-group BJ2AccNetResGroup --name BJ2Nic --vnet-name BJ2AccNet --subnet BJ2AccSubNet --accelerated-networking true --public-ip-address BJ2PublicIp --network-security-group BJ2AccNetResSecGroup
-az network nic create --resource-group BJ2AccNetResGroup --name BJ2Nic --vnet-name BJ2AccNet --subnet BJ2AccSubNet --public-ip-address BJ2PublicIp --network-security-group BJ2AccNetResSecGroup
 
 az vm create --resource-group BJ2AccNetResGroup --name BJ2VM --image "OpenLogic:CentOS:6.8:6.8.20170517"  --size Standard_D8_v3   --authentication-type password --admin-username azureuser --admin-password "MS2018.12.11a-"  --nics BJ2Nic
-
-
-az vm create --resource-group BJ2AccNetResGroup --name BJ2VM --attach-os-disk haha  --os-type Linux --size Standard_D8_v3 --location ChinaNorth2   --nics BJ2Nic                                                             MS2019.31.0a-
-
-az vm create -g rg01 -n vm01 --attach-os-disk vm01_OsDisk_1_d65db0c7a026490199cf55cc0abf7c8c_copy --nics vm015 --os-type Linux --plan-name 7_2 --plan-product cloudera-centos-os --plan-publisher cloudera
+# Open port 3389 to allow RDP traffic to host. we use Nsg rule define this port
+#   az vm open-port --port 3389 --resource-group myResourceGroup --name myVM
