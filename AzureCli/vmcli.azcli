@@ -22,3 +22,19 @@ az network nic create --resource-group BJ2AccNetResGroup --name BJ2Nic --vnet-na
 az vm create --resource-group BJ2AccNetResGroup --name BJ2VM --image "OpenLogic:CentOS:6.8:6.8.20170517"  --size Standard_D8_v3   --authentication-type password --admin-username azureuser --admin-password "MS2018.12.11a-"  --nics BJ2Nic
 # Open port 3389 to allow RDP traffic to host. we use Nsg rule define this port
 #   az vm open-port --port 3389 --resource-group myResourceGroup --name myVM
+
+#the second vm
+
+az network public-ip create --name BJ2PublicIp2 --resource-group BJ2AccNetResGroup
+az network nic create --resource-group BJ2AccNetResGroup --name BJ2Nic2 --vnet-name BJ2AccNet --subnet BJ2AccSubNet --accelerated-networking true --public-ip-address BJ2PublicIp2 --network-security-group BJ2AccNetResSecGroup
+
+az vm create --resource-group BJ2AccNetResGroup --name BJ2VM2 --image "Canonical:UbuntuServer:16.04-LTS:16.04.201812070"  --size Standard_D8_v3   --authentication-type password --admin-username azureuser --admin-password "MS2018.12.11a-"  --nics BJ2Nic2
+
+
+
+#the second vm
+
+az network public-ip create --name RGPublicIP2 --resource-group $myResourceGroup
+az network nic create --resource-group $myResourceGroup --name RGNic2 --vnet-name $myVnet --subnet $mySubnet --public-ip-address RGPublicIP2 --network-security-group $myNetworkSecurityGroup
+
+az vm create --resource-group $myResourceGroup --name AzureClivm --image "Canonical:UbuntuServer:18.04-LTS:latest"  --size Standard_D8_v3   --authentication-type password --admin-username azureuser --admin-password "MS2018.12.11a-"  --nics RGNic2

@@ -1,6 +1,11 @@
 #!/bin/bash
 
-# Update for your admin password
+#######################################################
+# Create by eagle for vm  research tash 
+# anything  please contect to: v-zonz@outlook.com
+# 
+#######################################################
+# Update for your vm parameter
 $myVM               =   "AzureCliVm"
 $AdminUserName      =   "azureuser"
 $AdminPassword      =   "MS2019.31.0a-"
@@ -9,6 +14,7 @@ $location           =   "eastasia"
 $vmImage            =   "Canonical:UbuntuServer:18.04-LTS:latest"
 $vmSize             =   "Standard_D8_v3"
 $vmPort             =   "22"
+#$vmPort2            =   ""
 
 $myNic              =   "RGNic"
 $myVnet             =   "RGVnet"
@@ -22,7 +28,7 @@ $myNetworkSecurityGroup = "RGNetworkSecGroup"
 
 #set to cloud 
 #az cloud set -n AzureChinaCloud
-az cloud set -n AzureCloud
+az cloud set -n AzureCloud 
 
 #login in 
 az login
@@ -52,3 +58,6 @@ az network nic create --resource-group $myResourceGroup --name $myNic --vnet-nam
 
 # Create a virtual machine. 
 az vm create --resource-group $myResourceGroup --name $myVM --location $location --size $vmSize --nics $myNic --image  $vmImage --authentication-type password  --admin-username $AdminUserName  --admin-password $AdminPassword  
+
+#az vm open-port --port $vmPort2 --resource-group $myResourceGroup --name $myVM
+
