@@ -1,0 +1,33 @@
+$sasuri="https://md-bm43hfkt0xq1.blob.core.windows.net/xzlsq4xp4vqg/abcd?sv=2017-04-17&sr=b&si=3d7a98fe-2135-4acc-8f7e-64229a9a80e0&sig=dDXzbEEunBQ7yo%2FmL6g%2F%2F2p2dj6xnOEr%2FnqfWJG2SKU%3D"
+$destinationContext = New-AzureStorageContext -StorageAccountName "undisk" -StorageAccountKey "gJkKDswS4AWxCrA72qxYmj0CqWQR0xrj39cLalXQa8rNspCckFHEv05Hj043taMJBTi7GAdE22luKKNSGZxBOw=="
+#开始拷贝
+Start-AzureStorageBlobCopy -AbsoluteUri $sasuri -DestContainer "unvhd"  -DestContext $destinationContext -DestBlob "un.vhd"
+#查看拷贝的状态
+Get-AzureStorageBlobCopyState -Blob "un.vhd" -Container "unvhd"   -Context $destinationContext
+
+#指定虚拟机名称
+$vmname = "undiskvm"
+
+#指定资源组
+$resourceGroup = "RGroup"
+
+#查看Subnet的ID
+$vnet = Get-AzureRmVirtualNetwork -Name RGVnet -ResourceGroupName $resourceGroup
+$subnet01 = Get-AzureRmVirtualNetworkSubnetConfig -Name <Subnet-1 Name> -VirtualNetwork $vnet
+
+#创建一个公网IP地址
+$publicIP = New-AzureRmPublicIpAddress -Name <IP Name> -ResourceGroupName $resourceGroup -Location "eastasia" -AllocationMethod Static -IpAddressVersion IPv4 –Force
+
+#创建网卡
+$NIC = New-AzureRmNetworkInterface -Name <Network Interface Name> -ResourceGroupName $resourceGroup -Location "eastasia" -SubnetId $subnet01.Id -PublicIpAddressId $publicIP.Id -PrivateIpAddress 10.0.0.6
+
+#配置要使用的存储账号以及系统盘名称
+$storage = Get-AzureRmStorageAccount -Name <storage account name> -ResourceGroupName $resourceGroup
+$OSDiskName = $vmname + "_OSDisk"
+$OSDiskUrl = "https://daneaststorage.blob.core.chinacloudapi.cn/vhds/DanVMTest.vhd"
+
+#生成虚拟机的配置
+$vmconfig = New-AzureRmVMConfig -VMName $vmname -VMSize Standard_A1 | Set-AzureRmVMOSDisk –Name $OSDiskName -VhdUri $OSDiskUrl -CreateOption attach -Windows | Add-AzureRmVMNetworkInterface -Id $NIC.Id -Primary
+
+#创建虚拟机
+New-AzureRmVM -ResourceGroupName $resourceGroup -Location "eastasia" -VM $vmconfig

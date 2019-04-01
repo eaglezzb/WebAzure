@@ -1,0 +1,38 @@
+
+
+$sasuri="磁盘中生成的URI"
+$destinationContext = New-AzureStorageContext -StorageAccountName "存储账号名称" -StorageAccountKey "存储账号Key"
+#开始拷贝
+Start-AzureStorageBlobCopy -AbsoluteUri $sasuri -DestContainer "存储账号blob中Container名称"  -DestContext $destinationContext -DestBlob "vhd文件名称"
+#查看拷贝的状态
+Get-AzureStorageBlobCopyState -Blob "vhd文件名称" -Container "存储账号blob中Container名称"   -Context $destinationContext
+
+
+
+
+#指定虚拟机名称
+$vmname = "<VM Name>"
+
+#指定资源组
+$resourceGroup = "<VM Name>"
+
+#查看Subnet的ID
+$vnet = Get-AzureRmVirtualNetwork -Name <VNET Name> -ResourceGroupName $resourceGroup
+$subnet01 = Get-AzureRmVirtualNetworkSubnetConfig -Name <Subnet-1 Name> -VirtualNetwork $vnet
+
+#创建一个公网IP地址
+$publicIP = New-AzureRmPublicIpAddress -Name <IP Name> -ResourceGroupName $resourceGroup -Location "China East" -AllocationMethod Static -IpAddressVersion IPv4 –Force
+
+#创建网卡
+$NIC = New-AzureRmNetworkInterface -Name <Network Interface Name> -ResourceGroupName $resourceGroup -Location "China East" -SubnetId $subnet01.Id -PublicIpAddressId $publicIP.Id -PrivateIpAddress 10.0.0.6
+
+#配置要使用的存储账号以及系统盘名称
+$storage = Get-AzureRmStorageAccount -Name <storage account name> -ResourceGroupName $resourceGroup
+$OSDiskName = $vmname + "_OSDisk"
+$OSDiskUrl = "https://daneaststorage.blob.core.chinacloudapi.cn/vhds/DanVMTest.vhd"
+
+#生成虚拟机的配置
+$vmconfig = New-AzureRmVMConfig -VMName $vmname -VMSize Standard_A1 | Set-AzureRmVMOSDisk –Name $OSDiskName -VhdUri $OSDiskUrl -CreateOption attach -Windows | Add-AzureRmVMNetworkInterface -Id $NIC.Id -Primary
+
+#创建虚拟机
+New-AzureRmVM -ResourceGroupName $resourceGroup -Location "China East" -VM $vmconfig

@@ -1,0 +1,27 @@
+﻿Login-AzureRmAccount
+$SubscriptionId = Get-AzureRmSubscription -SubscriptionId $SubscriptionId
+Select-AzureRmSubscription -SubscriptionId $SubscriptionId
+
+$rgname = "RGroup"
+$vmsize = "Standard_B2ms"
+$vmname = "shengchan-img"
+$locName="east asia"
+$nicName="scalegrid-nic"
+$vnetName="mktvnet"
+$SubName = "default"
+$osDiskName = "aks"
+$disk = "/subscriptions/efcc6f0e-edc2-4c36-9172-516f7fabc23b/resourceGroups/tagMkt/providers/Microsoft.Compute/disks/aks"
+$vm = New-AzureRmVMConfig -VMName $vmname -VMSize $vmsize
+$vnet=Get-AzureRmVirtualNetwork -Name $vnetName -ResourceGroupName $rgName
+$subnet = $Vnet.Subnets | Where-Object { $_.Name -eq $SubName}
+$pip=New-AzureRmPublicIpAddress -Name $nicName -ResourceGroupName $rgName -Location $locName -AllocationMethod Dynamic
+$nic=New-AzureRmNetworkInterface -Name $nicName -ResourceGroupName $rgName -Location $locName -SubnetId $subnet.Id  -PublicIpAddressId $pip.Id
+$vm = Add-AzureRmVMNetworkInterface -VM $vm -Id $nic.Id
+$vm = Set-AzureRmVMOSDisk -VM $VM -ManagedDiskId $disk -CreateOption attach -Linux
+$vm.Plan = New-Object -TypeName 'Microsoft.Azure.Management.Compute.Models.Plan'
+$vm.Plan.Name = "free"
+$vm.Plan.Product = "centos"
+$vm.Plan.Publisher = "scalegrid"
+Get-AzureRmMarketplaceTerms -Publisher "scalegrid" -Product "centos" -Name "free" | Set-AzureRmMarketplaceTerms -Accept
+New-AzureRmVM -ResourceGroupName $rgname -Location $locName -VM $vm
+MS2018.12.11a-

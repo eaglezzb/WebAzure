@@ -1,0 +1,4 @@
+
+az vm create --resource-group "资源组名称"  --name "虚拟机名称" --size Standard_D4s_v3 
+--os-type windows --vnet-name "虚拟机网络名称" --subnet "虚拟网络子网名称" --attach-os-disk "VHD URL" 
+--use-unmanaged-disk  

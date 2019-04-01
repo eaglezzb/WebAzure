@@ -1,3 +1,6 @@
+﻿#az storage blob copy start -b "blob文件名"  -c "目标容器名" --account-name "存储账号名" --account-key "存储访问KEY" --auth-mode key --source-uri "文件url"  
+
+
 #!/bin/bash
 
 #######################################################
@@ -57,9 +60,11 @@ az network nsg rule create  --resource-group $myResourceGroup --nsg-name $myNetw
 az network nic create --resource-group $myResourceGroup --name $myNic --vnet-name $myVnet --subnet $mySubnet --network-security-group $myNetworkSecurityGroup --public-ip-address $myPublicIP --accelerated-networking $isAcceleratednetwork
 
 # Create a virtual machine. 
-az vm create --resource-group $myResourceGroup --name $myVM --location $location --size $vmSize --nics $myNic --attach-os-disk "https://undisk.blob.core.windows.net/unvhd/un.vhd" --os-type linux --authentication-type password  --admin-username $AdminUserName  --admin-password $AdminPassword  
+#az vm create --resource-group $myResourceGroup --name $myVM --location $location --size $vmSize --nics $myNic --attach-os-disk "https://undisk.blob.core.windows.net/unvhd/un.vhd" --os-type linux --authentication-type password  --admin-username $AdminUserName  --admin-password $AdminPassword  
 
-az vm create -n MyVm -g $myResourceGroup --image "https://undisk.blob.core.windows.net/unvhd/un.vhd"" --assign-identity --scope /subscriptions/99999999-1bf0-4dda-aec3-cb9272f09590/MyResourceGroup/myRG/providers/Microsoft.Storage/storageAccounts/storage1
+#az vm create -n MyVm -g $myResourceGroup --image "https://undisk.blob.core.windows.net/unvhd/un.vhd"" --assign-identity --scope /subscriptions/99999999-1bf0-4dda-aec3-cb9272f09590/MyResourceGroup/myRG/providers/Microsoft.Storage/storageAccounts/storage1
 
 #az vm open-port --port $vmPort2 --resource-group $myResourceGroup --name $myVM
 
+
+az vm create --resource-group $myResourceGroup  --name $myVM --size Standard_D4s_v3 --os-type linux --vnet-name $myVnet --subnet $mySubnet --attach-os-disk "https://undisk.blob.core.windows.net/unvhd/un.vhd" --use-unmanaged-disk  
