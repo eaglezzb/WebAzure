@@ -1,0 +1,40 @@
+#
+# For Ubuntu18.04 research 
+# https://docs.azure.cn/zh-cn/articles/azure-operations-guide/storage/aog-storage-blob-howto-mount-as-file-system-via-blobfuse#%E5%AE%89%E8%A3%85-blobfuse
+#
+wget https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb
+sudo dpkg -i packages-microsoft-prod.deb
+sudo apt-get update
+sudo apt-get install blobfuse
+
+#将 SSD 用于临时路径
+sudo mkdir /mnt/blobfusetmp
+sudo chown <youruser> /mnt/blobfusetmp
+#My Admin name is aksadmin
+sudo chown aksadmin /mnt/blobfusetmp
+
+#配置存储帐户凭据  fuse_connection.cfg
+
+accountName myaccount
+accountKey myaccesskey==
+containerName mycontainer
+blobEndpoint myaccount.blob.core.chinacloudapi.cn
+
+accountName myaccount2019
+accountKey Bd3aD97pY6qYrvvLN2voqTStCRELGjSyP0S9GBFSbEixbDQPt1O6XaumSN3EIMyfzBnEhIV7fCKjc2EXAMSaQQ==
+containerName vmusic
+blobEndpoint myaccount2019.blob.core.chinacloudapi.cn
+
+#请确保限制对它的访问权限，防止其他用户读取它
+chmod 700 fuse_connection.cfg
+
+#创建装载用的空目录
+mkdir ~/mycontainer
+
+# 装载
+sudo blobfuse ~/mycontainer --tmp-path=/mnt/blobfusetmp  --config-file=/home/aksadmin/fuse_connection.cfg
+
+#/////////////////////////////////////////////////
+#/mnt  外面 创建  chmod 755 
+#cp /mnt/blobuse/root 下面 。 在回到 mycontainer 权限就是755 
+#=========================================

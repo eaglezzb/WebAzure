@@ -1,0 +1,10 @@
+sudo mkdir /mnt/blobfusetmp
+sudo chown usefuseadmin /mnt/blobfusetmp
+sudo blobfuse ~/mycontainer --tmp-path=/mnt/blobfusetmp  --config-file=/mnt/fuse_connection.cfg
+
+accountName myaccount2019
+accountKey Bd3aD97pY6qYrvvLN2voqTStCRELGjSyP0S9GBFSbEixbDQPt1O6XaumSN3EIMyfzBnEhIV7fCKjc2EXAMSaQQ==
+containerName vmusic
+blobEndpoint myaccount2019.blob.core.chinacloudapi.cn
+
+
